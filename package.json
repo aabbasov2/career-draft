@@ -9,19 +9,35 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/firebase-adapter": "^2.9.1",
+    "@emailjs/browser": "^4.4.1",
+    "@firebase/auth": "^1.10.6",
+    "@firebase/firestore": "^4.7.16",
+    "@heroicons/react": "^2.2.0",
+    "@react-pdf/renderer": "^4.3.0",
+    "@sendgrid/mail": "^8.1.5",
+    "@types/nodemailer": "^6.4.17",
+    "firebase": "^11.8.1",
+    "firebase-admin": "^12.7.0",
+    "groq-sdk": "^0.22.0",
+    "html2pdf.js": "^0.10.3",
+    "next": "15.3.2",
+    "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1",
+    "openai": "^4.103.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.2"
+    "react-hot-toast": "^2.5.2"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
