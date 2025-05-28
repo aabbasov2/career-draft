@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import { AuthProvider } from '@/contexts/AuthContext';
+import Navbar from '@/components/Navbar';
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
+  variable: '--font-inter',
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: '--font-outfit',
 });
 
 export const metadata: Metadata = {
@@ -20,9 +28,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+      <body className="min-h-screen bg-gradient-to-b from-[#F9FAFB] to-[#F3F4F6] text-gray-900 font-sans">
+        <AuthProvider>
+          <Navbar />
+          <main>
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );

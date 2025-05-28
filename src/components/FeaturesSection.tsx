@@ -1,71 +1,74 @@
-export default function FeaturesSection() {
+import React from 'react';
+
+const FeaturesSection = () => {
   const features = [
     {
       title: "AI-Powered Resume Builder",
-      description: "Create professional resumes tailored to your industry with advanced AI technology.",
+      description: "Our advanced AI analyzes job descriptions and tailors your resume to highlight the most relevant skills and experiences.",
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
         </svg>
-      ),
+      )
     },
     {
       title: "One-Click Cover Letters",
-      description: "Generate compelling cover letters instantly, perfectly matched to your resume.",
+      description: "Generate professional, personalized cover letters in seconds that complement your resume perfectly.",
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
         </svg>
-      ),
+      )
     },
     {
-      title: "PDF Export & Email Delivery",
-      description: "Export your documents in multiple formats and send them directly to employers.",
+      title: "ATS Optimization",
+      description: "Beat applicant tracking systems with our built-in optimization that matches your resume to job descriptions.",
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        <svg className="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
         </svg>
-      ),
-    },
+      )
+    }
   ];
 
   return (
-    <div className="bg-white py-16 sm:py-24">
+    <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            Powerful Features
+            Everything you need for your job search
           </h2>
-          <p className="mt-4 text-xl text-gray-600">
-            Everything you need to create professional resumes and cover letters
+          <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+            Our comprehensive tools help you create professional resumes, craft compelling cover letters, and track your job applications—all in one place.
           </p>
         </div>
 
-        <div className="mt-16">
+        <div className="mt-12">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
-              <div
-                key={index}
-                className="relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
-              >
-                <div>
-                  <span className="rounded-lg inline-flex p-3 bg-blue-50 text-blue-600 ring-4 ring-white">
-                    {feature.icon}
-                  </span>
-                </div>
-                <div className="mt-8">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {feature.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500">
-                    {feature.description}
-                  </p>
+              <div key={index} className="pt-6">
+                <div className="flow-root bg-gray-50 rounded-lg px-6 pb-8">
+                  <div className="-mt-6">
+                    <div>
+                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
+                        {feature.icon}
+                      </span>
+                    </div>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
+                      {feature.title}
+                    </h3>
+                    <p className="mt-5 text-base text-gray-500">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-}
+};
+
+export default FeaturesSection;
