@@ -1,9 +1,24 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+interface EmailAttachment {
+  filename: string;
+  content: string;
+  type: string;
+  disposition?: string;
+}
+
+interface EmailRequest {
+  to: string | string[];
+  subject: string;
+  text: string;
+  html?: string;
+  attachments?: EmailAttachment[];
+}
+
 export async function POST(request: Request) {
   try {
-    const { to, subject, text, html, attachments } = await request.json();
+    const { to, subject, text, html, attachments } = await request.json() as Partial<EmailRequest>;
 
     // Validate required fields
     if (!to || !subject || !text) {
@@ -28,7 +43,7 @@ export async function POST(request: Request) {
     });
 
     // Process attachments
-    const processedAttachments = (attachments || []).map((attachment: any) => ({
+    const processedAttachments = (attachments || []).map((attachment: EmailAttachment) => ({
       filename: attachment.filename,
       content: Buffer.from(attachment.content, 'base64'),
       contentType: attachment.type,
@@ -53,12 +68,15 @@ export async function POST(request: Request) {
       messageId: info.messageId,
       previewUrl: nodemailer.getTestMessageUrl(info)
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error sending email:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
     return NextResponse.json(
       { 
-        error: error.message || 'Failed to send email',
-        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? errorStack : undefined
       },
       { status: 500 }
     );

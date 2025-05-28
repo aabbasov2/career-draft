@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
 import { db } from '@/lib/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, DocumentData } from 'firebase/firestore';
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
@@ -94,7 +93,12 @@ export async function POST(req: Request) {
   }
 }
 
-function generateMessages(documentType: string, jobDescription: string) {
+interface Message {
+  role: 'system' | 'assistant' | 'user';
+  content: string;
+}
+
+function generateMessages(documentType: 'cover-letter' | 'resume', jobDescription: string): Message[] {
   if (documentType === 'cover-letter') {
     return [
       {
@@ -132,12 +136,22 @@ function generateMessages(documentType: string, jobDescription: string) {
   throw new Error('Invalid document type');
 }
 
-async function saveDocumentGeneration(userEmail: string, documentType: string, contentLength: number) {
+interface UserDocument extends DocumentData {
+  generationCount?: number;
+  lastGeneration?: {
+    type: string;
+    timestamp: string;
+    contentLength: number;
+  };
+  updatedAt?: string;
+}
+
+async function saveDocumentGeneration(userEmail: string, documentType: string, contentLength: number): Promise<void> {
   const userRef = doc(db, 'users', userEmail);
   const userDoc = await getDoc(userRef);
   
   if (userDoc.exists()) {
-    const userData = userDoc.data();
+    const userData = userDoc.data() as UserDocument;
     const currentCount = userData.generationCount || 0;
     
     await setDoc(userRef, {
