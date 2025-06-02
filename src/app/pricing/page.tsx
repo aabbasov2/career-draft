@@ -1,12 +1,14 @@
 'use client';
 
-import { CheckIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, SparklesIcon, StarIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useState } from 'react';
 
 type Plan = {
   name: string;
   price: string;
+  originalPrice?: string;
+  period: string;
   description: string;
   features: string[];
   featured?: boolean;
@@ -14,278 +16,306 @@ type Plan = {
   href: string;
   popular?: boolean;
   priceId?: string;
+  icon: any;
+  badge?: string;
 };
+
+const faqs = [
+  {
+    question: "What's included in the free plan?",
+    answer: "The free plan includes 1 resume, 1 cover letter, access to basic templates, and community support. It's perfect for trying out our platform."
+  },
+  {
+    question: "Can I cancel my subscription anytime?",
+    answer: "Yes! You can cancel your subscription at any time. You'll continue to have access to your paid features until the end of your billing period."
+  },
+  {
+    question: "Do you offer refunds?",
+    answer: "We offer a 30-day money-back guarantee. If you're not satisfied with our service, we'll provide a full refund within 30 days of purchase."
+  },
+  {
+    question: "Can I upgrade or downgrade my plan?",
+    answer: "Absolutely! You can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle."
+  },
+  {
+    question: "Is my data secure?",
+    answer: "Yes, we take data security seriously. All your information is encrypted and stored securely. We never share your personal data with third parties."
+  }
+];
 
 export default function PricingPage() {
   const [hoveredPlan, setHoveredPlan] = useState<string | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const plans: Plan[] = [
     {
       name: 'Free',
       price: '$0',
+      period: 'forever',
       description: 'Perfect for trying us out',
       features: [
         '1 Resume',
         '1 Cover Letter',
         'Basic Templates',
-        'Limited Support'
+        'Community Support',
+        'Basic AI Suggestions'
       ],
       cta: 'Get Started',
       href: '/signup',
-      popular: false
+      popular: false,
+      icon: StarIcon
     },
     {
       name: 'Quick Draft',
       price: '$4.99',
-      description: 'Most popular choice',
+      originalPrice: '$9.99',
+      period: 'one-time',
+      description: 'Most popular choice for students',
       features: [
         '3 Resumes',
         '3 Cover Letters',
-        'All Templates',
+        'All Premium Templates',
         'PDF Export',
         'Email Delivery',
-        'Priority Support'
+        'Priority Support',
+        'Advanced AI Suggestions',
+        'ATS Optimization'
       ],
       featured: true,
       cta: 'Get Started',
       href: '/signup?plan=quickdraft',
       popular: true,
-      priceId: 'price_123',
+      icon: RocketLaunchIcon,
+      badge: 'Most Popular'
     },
     {
-      name: 'Pro Unlimited',
+      name: 'Pro',
       price: '$9.99',
-      description: 'For power users',
+      period: 'per month',
+      description: 'For serious job seekers',
       features: [
         'Unlimited Resumes',
         'Unlimited Cover Letters',
-        'All Templates',
+        'All Premium Templates',
         'PDF Export',
         'Email Delivery',
-        'Unlimited Rewrites',
-        '24/7 Priority Support'
+        'Priority Support',
+        'Advanced AI Suggestions',
+        'ATS Optimization',
+        'LinkedIn Profile Optimization',
+        'Interview Preparation',
+        'Salary Negotiation Guide'
       ],
-      cta: 'Go Pro',
+      cta: 'Start Free Trial',
       href: '/signup?plan=pro',
       popular: false,
-      priceId: 'price_456',
-    },
+      icon: SparklesIcon
+    }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 py-24 sm:py-32 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10"></div>
-      <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 transform">
-        <div className="w-96 h-96 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-      </div>
-      <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 transform">
-        <div className="w-96 h-96 bg-gradient-to-br from-pink-100 to-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse animation-delay-2000"></div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-purple-600">
+        {/* Background elements */}
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8 text-center">
+          <div className="animate-fadeInUp">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6">
+              Simple, <span className="bg-gradient-to-r from-yellow-400 to-pink-400 bg-clip-text text-transparent">transparent</span> pricing
+            </h1>
+            <p className="mt-6 max-w-3xl mx-auto text-xl text-gray-100 leading-relaxed">
+              Choose the plan that works for you. Start free, upgrade when you need more features.
+            </p>
+            <div className="mt-8 inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white">
+              <SparklesIcon className="w-5 h-5 mr-2" />
+              <span className="text-sm font-medium">30-day money-back guarantee</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center rounded-full bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 mb-8">
-            ✨ Limited Time: All plans include bonus templates
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
-            Simple, transparent pricing
-          </h1>
-          <p className="mt-6 text-xl leading-8 text-gray-600 max-w-2xl mx-auto">
-            Choose the perfect plan for your needs. No hidden fees, no contracts.
-          </p>
-        </div>
-        
-        <div className="mt-20 flex flex-col items-center justify-center gap-8 md:flex-row">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative flex flex-col rounded-3xl p-8 shadow-xl ring-1 ring-gray-200 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${
-                plan.popular 
-                  ? 'bg-gradient-to-br from-blue-50 to-indigo-50 ring-2 ring-blue-500 scale-105' 
-                  : 'bg-white/80 hover:bg-white'
-              } ${hoveredPlan === plan.name ? 'transform scale-102' : ''}`}
-              onMouseEnter={() => setHoveredPlan(plan.name)}
-              onMouseLeave={() => setHoveredPlan(null)}
-            >
-              {plan.popular && (
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-                  <div className="inline-flex items-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-1 text-sm font-semibold text-white shadow-lg">
-                    🔥 Most Popular
+      {/* Pricing Cards */}
+      <div className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            {plans.map((plan, index) => (
+              <div
+                key={plan.name}
+                className={`relative group animate-fadeInUp ${
+                  plan.featured 
+                    ? 'transform scale-105 z-10' 
+                    : hoveredPlan === plan.name 
+                      ? 'transform scale-105' 
+                      : ''
+                } transition-all duration-300`}
+                style={{animationDelay: `${index * 0.2}s`}}
+                onMouseEnter={() => setHoveredPlan(plan.name)}
+                onMouseLeave={() => setHoveredPlan(null)}
+              >
+                {plan.badge && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+                    <span className="bg-gradient-to-r from-primary to-secondary text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                      {plan.badge}
+                    </span>
+                  </div>
+                )}
+                
+                <div className={`glass-card p-8 h-full ${
+                  plan.featured 
+                    ? 'border-2 border-primary shadow-2xl' 
+                    : ''
+                }`}>
+                  <div className="text-center">
+                    <div className={`mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-6 ${
+                      plan.featured 
+                        ? 'bg-gradient-to-r from-primary to-secondary text-white' 
+                        : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      <plan.icon className="h-8 w-8" />
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                    <p className="text-gray-600 mb-6">{plan.description}</p>
+                    
+                    <div className="mb-6">
+                      <div className="flex items-center justify-center">
+                        {plan.originalPrice && (
+                          <span className="text-lg text-gray-400 line-through mr-2">{plan.originalPrice}</span>
+                        )}
+                        <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                      </div>
+                      <span className="text-gray-600">/{plan.period}</span>
+                    </div>
+                    
+                    <Link
+                      href={plan.href}
+                      className={`w-full mb-8 ${
+                        plan.featured 
+                          ? 'btn-primary' 
+                          : 'btn-secondary'
+                      }`}
+                    >
+                      {plan.cta}
+                    </Link>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-900 text-center mb-4">What's included:</h4>
+                    {plan.features.map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-start">
+                        <CheckIcon className="h-5 w-5 text-primary mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-600">{feature}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              )}
-              
-              <div className="text-center">
-                <h3 className="text-xl font-bold leading-8 text-gray-900 mb-2">
-                  {plan.name}
-                </h3>
-                {plan.popular && (
-                  <p className="text-sm font-medium text-blue-600 bg-blue-100 rounded-full px-3 py-1 inline-block">
-                    {plan.description}
-                  </p>
-                )}
-              </div>
-              
-              <div className="text-center my-8">
-                <div className="flex items-baseline justify-center gap-x-1">
-                  <span className="text-5xl font-bold tracking-tight text-gray-900 bg-gradient-to-r from-gray-900 to-blue-600 bg-clip-text text-transparent">
-                    {plan.price}
-                  </span>
-                  {plan.name !== 'Free' && (
-                    <span className="text-lg font-semibold leading-6 text-gray-600">/month</span>
-                  )}
-                </div>
-                {plan.name !== 'Free' && (
-                  <p className="text-sm text-gray-500 mt-1">Billed monthly, cancel anytime</p>
-                )}
-              </div>
-
-              <ul
-                role="list"
-                className="space-y-4 text-sm leading-6 text-gray-700 flex-1"
-              >
-                {plan.features.map((feature, index) => (
-                  <li key={feature} className="flex gap-x-3 items-start">
-                    <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${
-                      plan.popular ? 'bg-blue-100' : 'bg-green-100'
-                    }`}>
-                      <CheckIcon
-                        className={`h-3 w-3 ${plan.popular ? 'text-blue-600' : 'text-green-600'}`}
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <span className="font-medium">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <Link
-                href={plan.href}
-                className={`mt-8 block w-full rounded-xl px-4 py-3 text-center text-sm font-bold leading-6 transition-all duration-200 transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 shadow-lg ${
-                  plan.popular
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 focus-visible:outline-blue-600 shadow-blue-200'
-                    : 'text-blue-600 bg-white ring-2 ring-inset ring-blue-600 hover:bg-blue-50 hover:ring-blue-700 hover:text-blue-700 shadow-blue-100'
-                }`}
-              >
-                {plan.cta}
-                <span className="ml-1">→</span>
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-20 bg-white/60 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8 md:p-12">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">Frequently asked questions</h2>
-          <div className="grid gap-8 md:grid-cols-2 md:gap-12">
-            {[
-              {
-                question: "Can I try before I buy?",
-                answer: "Absolutely! Our free plan includes 3 resume generations so you can test out our platform before committing to a paid plan."
-              },
-              {
-                question: "What payment methods do you accept?",
-                answer: "We accept all major credit cards including Visa, Mastercard, American Express, and Discover. We also support PayPal."
-              },
-              {
-                question: "Can I cancel anytime?",
-                answer: "Yes, you can cancel your subscription at any time. You'll continue to have access to the paid features until the end of your billing period."
-              },
-              {
-                question: "Do you offer discounts for students?",
-                answer: "Yes! We offer a 50% discount for students with a valid .edu email address. Contact our support team to claim your discount."
-              }
-            ].map((faq, index) => (
-              <div key={index} className="group">
-                <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
-                  {faq.question}
-                </h3>
-                <p className="mt-3 text-gray-600 leading-relaxed">
-                  {faq.answer}
-                </p>
               </div>
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Features Comparison Table */}
-        <div className="mt-24">
-          <h3 className="text-3xl font-bold tracking-tight text-gray-900 text-center mb-12">
-            Compare plans
-          </h3>
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead className="bg-gray-50/80">
-                  <tr>
-                    <th scope="col" className="px-6 py-4 text-left text-sm font-bold text-gray-900">
-                      Features
-                    </th>
-                    <th scope="col" className="px-6 py-4 text-center text-sm font-bold text-gray-900">
-                      Free
-                    </th>
-                    <th scope="col" className="px-6 py-4 text-center text-sm font-bold text-blue-600 bg-blue-50">
-                      $4.99
-                    </th>
-                    <th scope="col" className="px-6 py-4 text-center text-sm font-bold text-gray-900">
-                      $9.99/mo
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {[
-                    { feature: "Resume Generator", free: true, quick: true, pro: true },
-                    { feature: "Cover Letter Generator", free: true, quick: true, pro: true },
-                    { feature: "PDF Export", free: false, quick: true, pro: true },
-                    { feature: "Email Delivery", free: false, quick: true, pro: true },
-                    { feature: "Unlimited Rewrites", free: false, quick: false, pro: true }
-                  ].map((row, index) => (
-                    <tr key={index} className="hover:bg-blue-50/30 transition-colors duration-200">
-                      <td className="px-6 py-4 text-sm font-semibold text-gray-900">
-                        {row.feature}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {row.free ? (
-                          <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                            <CheckIcon className="h-4 w-4 text-green-600" />
-                          </div>
-                        ) : (
-                          <span className="text-red-500 text-lg">✕</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-center bg-blue-50/50">
-                        {row.quick ? (
-                          <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                            <CheckIcon className="h-4 w-4 text-green-600" />
-                          </div>
-                        ) : (
-                          <span className="text-red-500 text-lg">✕</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {row.pro ? (
-                          <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                            <CheckIcon className="h-4 w-4 text-green-600" />
-                          </div>
-                        ) : (
-                          <span className="text-red-500 text-lg">✕</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+      {/* Features Comparison */}
+      <div className="py-20 bg-gradient-to-r from-gray-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 animate-fadeInUp">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Why choose <span className="text-gradient">CareerDraft</span>?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We're not just another resume builder. We're your career advancement partner.
+            </p>
           </div>
           
-          <div className="mt-12 text-center">
-            <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-6 py-3">
-              <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              <p className="text-sm font-medium text-green-800">
-                100% money-back guarantee. No questions asked.
-              </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: SparklesIcon,
+                title: 'AI-Powered Optimization',
+                description: 'Our advanced AI analyzes your resume and suggests improvements to beat ATS systems and impress recruiters.'
+              },
+              {
+                icon: RocketLaunchIcon,
+                title: 'Student-Friendly Pricing',
+                description: 'Affordable plans designed for students and new graduates. No hidden fees, no long-term commitments.'
+              },
+              {
+                icon: CheckIcon,
+                title: 'Proven Results',
+                description: 'Over 10,000 students have landed their dream jobs using CareerDraft. Join our success stories.'
+              }
+            ].map((feature, index) => (
+              <div key={index} className="glass-card p-6 text-center hover-lift animate-fadeInUp" style={{animationDelay: `${index * 0.2}s`}}>
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-r from-primary to-secondary text-white mb-4">
+                  <feature.icon className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 animate-fadeInUp">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Frequently Asked <span className="text-gradient">Questions</span>
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to know about our pricing and features
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <div key={index} className="glass-card animate-fadeInUp" style={{animationDelay: `${index * 0.1}s`}}>
+                <button
+                  className="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                >
+                  <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
+                  <div className={`transform transition-transform duration-200 ${openFaq === index ? 'rotate-180' : ''}`}>
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </button>
+                {openFaq === index && (
+                  <div className="px-6 pb-4">
+                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="py-20 bg-gradient-to-r from-primary to-secondary relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <div className="animate-fadeInUp">
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Ready to Land Your Dream Job?
+            </h2>
+            <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto">
+              Join thousands of students who've already transformed their careers with CareerDraft.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/signup" className="btn-secondary bg-white text-primary hover:bg-gray-50">
+                Start Free Today
+              </Link>
+              <Link href="/about" className="btn-outline border-white text-white hover:bg-white hover:text-primary">
+                Learn More
+              </Link>
             </div>
           </div>
         </div>

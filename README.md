@@ -18,7 +18,7 @@ CareerDraft is a modern, AI-powered resume and cover letter builder that helps y
 - **Backend**: Next.js API Routes
 - **Authentication**: Firebase Authentication
 - **Database**: Firestore
-- **AI**: Groq API with LLaMA3
+- **AI**: OpenAI GPT-4o-2024-08-06
 - **PDF Generation**: html2pdf.js
 - **Email**: Nodemailer with ethereal.email (dev) / SendGrid (prod)
 - **UI Components**: Headless UI, Hero Icons

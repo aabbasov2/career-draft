@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, DocumentData } from 'firebase/firestore';
+import OpenAI from 'openai';
 
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export async function POST(req: Request) {
   try {
@@ -25,49 +28,25 @@ export async function POST(req: Request) {
     const messages = generateMessages(documentType, jobDescription);
 
     // Verify API key is set
-    if (!process.env.NEXT_PUBLIC_GROQ_API_KEY) {
-      console.error('NEXT_PUBLIC_GROQ_API_KEY is not set in environment variables');
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('OPENAI_API_KEY is not set in environment variables');
       return NextResponse.json(
         { error: 'Server configuration error: Missing API key' },
         { status: 500 }
       );
     }
 
-    console.log('Calling Groq API with model: llama-3.3-70b-versatile');
+    console.log('Calling OpenAI API with model: gpt-4o-2024-08-06');
     console.log('Messages being sent:', JSON.stringify(messages, null, 2));
     
-    // Call Groq API
-    const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_GROQ_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages,
-        temperature: 1,
-        max_tokens: 1024,
-        top_p: 1
-      })
+    // Call OpenAI API
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-2024-08-06',
+      messages,
+      temperature: 1,
+      max_tokens: 1024,
+      top_p: 1
     });
-
-    const responseText = await response.text();
-    console.log('Raw API response status:', response.status);
-    // Only log first 500 chars to avoid console spam
-    console.log('Raw API response start:', responseText.substring(0, 500));
-
-    if (!response.ok) {
-      throw new Error(`Groq API error (${response.status}): ${responseText.substring(0, 200)}`);
-    }
-
-    let completion;
-    try {
-      completion = JSON.parse(responseText);
-    } catch (e) {
-      console.error('Failed to parse API response as JSON. Response start:', responseText.substring(0, 200));
-      throw new Error('Invalid JSON response from API');
-    }
 
     const content = completion.choices?.[0]?.message?.content?.trim() || '';
 

@@ -8,6 +8,16 @@ import GeneratedContent from '@/components/GeneratedContent';
 import { doc, getDoc, setDoc, collection } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'react-hot-toast';
+import Link from 'next/link';
+import { 
+  SparklesIcon, 
+  DocumentTextIcon, 
+  BriefcaseIcon, 
+  ArrowLeftIcon,
+  UserCircleIcon,
+  ChevronRightIcon,
+  RocketLaunchIcon
+} from '@heroicons/react/24/outline';
 
 type DocumentType = 'resume' | 'cover-letter' | 'both';
 
@@ -33,7 +43,7 @@ export default function JobsPage() {
     }
   }, [user, loading, router]);
 
-  // Use your route.ts instead of direct Groq calls
+  // Use your route.ts which now uses OpenAI GPT-4
   const generateDocument = async (jobDescription: string, documentType: 'resume' | 'cover-letter'): Promise<string> => {
     try {
       if (!user?.email) {
@@ -49,12 +59,12 @@ export default function JobsPage() {
           jobDescription,
           documentType,
           email: user.email
-        })
+        }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate content');
+        throw new Error(errorData.error || 'Failed to generate document');
       }
 
       const data = await response.json();
@@ -66,37 +76,25 @@ export default function JobsPage() {
   };
 
   const handleGenerate = async (jobDescription: string, documentType: DocumentType) => {
-    if (!user) {
-      console.error('User not authenticated');
-      toast.error('Please sign in to generate documents');
-      return;
-    }
-
     setIsGenerating(true);
-    setGeneratedContent({ resume: null, 'cover-letter': null });
-
     try {
-      console.log('Starting document generation for types:', documentType);
-      const types = documentType === 'both' ? ['resume', 'cover-letter'] : [documentType];
-      
-      for (const type of types as ('resume' | 'cover-letter')[]) {
-        console.log(`Generating ${type}...`);
-        
-        const content = await generateDocument(jobDescription, type);
-        
+      if (documentType === 'both') {
+        const [resume, coverLetter] = await Promise.all([
+          generateDocument(jobDescription, 'resume'),
+          generateDocument(jobDescription, 'cover-letter')
+        ]);
+        setGeneratedContent({ resume, 'cover-letter': coverLetter });
+      } else {
+        const content = await generateDocument(jobDescription, documentType);
         setGeneratedContent(prev => ({
           ...prev,
-          [type]: content
+          [documentType]: content
         }));
-        
-        console.log(`Successfully generated ${type}`);
       }
-      
-      toast.success('Documents generated successfully!');
+      toast.success('Document generated successfully!');
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to generate content';
-      console.error('Generation error:', errorMessage, error);
-      toast.error(`Error: ${errorMessage}`);
+      console.error('Error generating document:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to generate document');
     } finally {
       setIsGenerating(false);
     }
@@ -125,45 +123,188 @@ export default function JobsPage() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-primary via-secondary to-purple-600 relative overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/5"></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-gradient-to-r from-pink-400 to-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        
+        <div className="glass-card p-8 text-center animate-fadeInUp">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-700 font-medium">Loading your workspace...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0 space-y-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Generate Tailored Documents</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Create a customized resume or cover letter based on a job description
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-primary via-secondary to-purple-600 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-black/5 z-0"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob z-0"></div>
+      <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000 z-0"></div>
+      <div className="absolute -bottom-8 left-20 w-72 h-72 bg-gradient-to-r from-pink-400 to-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000 z-0"></div>
+
+      {/* Header */}
+      <header className="relative z-50 glass-card mx-4 mt-4 rounded-2xl">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center">
+            <Link href="/dashboard" className="flex items-center mr-6 text-gray-600 hover:text-gray-900 transition-colors">
+              <ArrowLeftIcon className="h-5 w-5 mr-2" />
+              Back to Dashboard
+            </Link>
+            <div className="flex items-center">
+              <SparklesIcon className="h-8 w-8 text-primary mr-3" />
+              <h1 className="text-2xl font-bold text-gray-900">CareerDraft</h1>
+            </div>
+            <nav className="ml-10 flex items-center space-x-1">
+              <Link 
+                href="/dashboard" 
+                className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/50 transition-all duration-200"
+              >
+                Dashboard
+              </Link>
+              <Link 
+                href="/dashboard/jobs" 
+                className="px-4 py-2 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary shadow-lg"
+              >
+                Jobs
+              </Link>
+              <Link 
+                href="/profile" 
+                className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/50 transition-all duration-200"
+              >
+                Profile
+              </Link>
+            </nav>
           </div>
-          
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="flex items-center space-x-4">
+            <div className="text-right">
+              <p className="text-sm font-medium text-gray-900">{user?.email}</p>
+            </div>
+            <button
+              onClick={() => {
+                router.push('/login');
+              }}
+              className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/50 transition-all duration-200"
+            >
+              Sign out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="relative z-10 max-w-7xl mx-auto pt-8 pb-8 px-4 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <div className="glass-card p-8 mb-8 text-center animate-fadeInUp">
+          <div className="max-w-3xl mx-auto">
+            <div className="flex items-center justify-center mb-6">
+              <div className="p-4 bg-gradient-to-r from-primary to-secondary rounded-2xl text-white">
+                <RocketLaunchIcon className="h-12 w-12" />
+              </div>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Generate Tailored Documents
+            </h1>
+            <p className="text-xl text-gray-600 mb-6">
+              Create AI-powered resumes and cover letters that perfectly match any job description
+            </p>
+            <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
+              <div className="flex items-center">
+                <SparklesIcon className="h-5 w-5 mr-2 text-primary" />
+                AI-Powered
+              </div>
+              <div className="flex items-center">
+                <DocumentTextIcon className="h-5 w-5 mr-2 text-primary" />
+                Professional Format
+              </div>
+              <div className="flex items-center">
+                <BriefcaseIcon className="h-5 w-5 mr-2 text-primary" />
+                Job-Specific
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="glass-card p-6 text-center animate-fadeInUp" style={{animationDelay: '0.1s'}}>
+            <div className="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white w-fit mx-auto mb-4">
+              <DocumentTextIcon className="h-8 w-8" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Resume Builder</h3>
+            <p className="text-gray-600 text-sm">Create a professional resume tailored to your target job</p>
+          </div>
+          <div className="glass-card p-6 text-center animate-fadeInUp" style={{animationDelay: '0.2s'}}>
+            <div className="p-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl text-white w-fit mx-auto mb-4">
+              <BriefcaseIcon className="h-8 w-8" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Cover Letter</h3>
+            <p className="text-gray-600 text-sm">Generate compelling cover letters that stand out</p>
+          </div>
+          <div className="glass-card p-6 text-center animate-fadeInUp" style={{animationDelay: '0.3s'}}>
+            <div className="p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl text-white w-fit mx-auto mb-4">
+              <UserCircleIcon className="h-8 w-8" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Complete Package</h3>
+            <p className="text-gray-600 text-sm">Get both resume and cover letter in one go</p>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="space-y-8">
+          {/* Job Input Form */}
+          <div className="glass-card p-8 animate-fadeInUp" style={{animationDelay: '0.4s'}}>
+            <div className="flex items-center mb-6">
+              <div className="p-3 bg-gradient-to-r from-primary to-secondary rounded-xl text-white mr-4">
+                <SparklesIcon className="h-6 w-6" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Start Creating</h2>
+                <p className="text-gray-600">Paste the job description and choose what to generate</p>
+              </div>
+            </div>
             <JobInputForm 
               onGenerate={handleGenerate} 
               isLoading={isGenerating}
             />
           </div>
 
-          {generatedContent.resume && (
-            <GeneratedContent
-              content={generatedContent.resume}
-              type="resume"
-              onSave={(content) => handleSaveDocument(content, 'resume')}
-              isSaving={isSaving}
-            />
-          )}
-          {generatedContent['cover-letter'] && (
-            <GeneratedContent
-              content={generatedContent['cover-letter']}
-              type="cover-letter"
-              onSave={(content) => handleSaveDocument(content, 'cover-letter')}
-              isSaving={isSaving}
-            />
+          {/* Generated Content */}
+          {(generatedContent.resume || generatedContent['cover-letter']) && (
+            <div className="space-y-6">
+              <div className="glass-card p-6 animate-fadeInUp" style={{animationDelay: '0.5s'}}>
+                <div className="flex items-center mb-4">
+                  <div className="p-2 bg-gradient-to-r from-green-500 to-green-600 rounded-lg text-white mr-3">
+                    <DocumentTextIcon className="h-5 w-5" />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900">Generated Documents</h2>
+                </div>
+                <p className="text-gray-600 mb-6">Your AI-generated documents are ready! Review and save them to your profile.</p>
+              </div>
+
+              {generatedContent.resume && (
+                <div className="animate-fadeInUp" style={{animationDelay: '0.6s'}}>
+                  <GeneratedContent
+                    content={generatedContent.resume}
+                    type="resume"
+                    onSave={(content) => handleSaveDocument(content, 'resume')}
+                    isSaving={isSaving}
+                  />
+                </div>
+              )}
+              
+              {generatedContent['cover-letter'] && (
+                <div className="animate-fadeInUp" style={{animationDelay: '0.7s'}}>
+                  <GeneratedContent
+                    content={generatedContent['cover-letter']}
+                    type="cover-letter"
+                    onSave={(content) => handleSaveDocument(content, 'cover-letter')}
+                    isSaving={isSaving}
+                  />
+                </div>
+              )}
+            </div>
           )}
         </div>
       </main>
