@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { AuthProvider } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
+import { Toaster } from 'react-hot-toast';
 import "./globals.css";
 
 const inter = Inter({
@@ -32,6 +33,28 @@ export default function RootLayout({
       <body className="min-h-screen bg-gradient-to-b from-[#F9FAFB] to-[#F3F4F6] text-gray-900 font-sans">
         <AuthProvider>
           <Navbar />
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+              success: {
+                duration: 3000,
+                style: {
+                  background: '#10B981',
+                },
+              },
+              error: {
+                duration: 5000,
+                style: {
+                  background: '#EF4444',
+                },
+              },
+            }}
+          />
           <main>
             {children}
           </main>

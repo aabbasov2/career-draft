@@ -145,56 +145,7 @@ export default function JobsPage() {
       <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000 z-0"></div>
       <div className="absolute -bottom-8 left-20 w-72 h-72 bg-gradient-to-r from-pink-400 to-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000 z-0"></div>
 
-      {/* Header */}
-      <header className="relative z-50 glass-card mx-4 mt-4 rounded-2xl">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <Link href="/dashboard" className="flex items-center mr-6 text-gray-600 hover:text-gray-900 transition-colors">
-              <ArrowLeftIcon className="h-5 w-5 mr-2" />
-              Back to Dashboard
-            </Link>
-            <div className="flex items-center">
-              <SparklesIcon className="h-8 w-8 text-primary mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">CareerDraft</h1>
-            </div>
-            <nav className="ml-10 flex items-center space-x-1">
-              <Link 
-                href="/dashboard" 
-                className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/50 transition-all duration-200"
-              >
-                Dashboard
-              </Link>
-              <Link 
-                href="/dashboard/jobs" 
-                className="px-4 py-2 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary shadow-lg"
-              >
-                Jobs
-              </Link>
-              <Link 
-                href="/profile" 
-                className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/50 transition-all duration-200"
-              >
-                Profile
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">{user?.email}</p>
-            </div>
-            <button
-              onClick={() => {
-                router.push('/login');
-              }}
-              className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/50 transition-all duration-200"
-            >
-              Sign out
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="relative z-10 max-w-7xl mx-auto pt-8 pb-8 px-4 sm:px-6 lg:px-8">
+      <main className="relative z-10 max-w-7xl mx-auto pt-20 pb-8 px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <div className="glass-card p-8 mb-8 text-center animate-fadeInUp">
           <div className="max-w-3xl mx-auto">

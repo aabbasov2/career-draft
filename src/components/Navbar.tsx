@@ -26,41 +26,62 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
+            <Link href={user ? "/dashboard" : "/"} className="flex-shrink-0 flex items-center">
               <span className="text-2xl font-bold bg-gradient-to-r from-[#43B581] to-[#6366F1] bg-clip-text text-transparent">
                 CareerDraft
               </span>
             </Link>
             <div className="hidden md:ml-10 md:flex md:space-x-8">
-              <Link 
-                href="/" 
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-[#43B581] transition-colors"
-              >
-                Home
-              </Link>
-              <Link 
-                href="/pricing" 
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-[#43B581] transition-colors"
-              >
-                Pricing
-              </Link>
-              <Link 
-                href="/about" 
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-[#43B581] transition-colors"
-              >
-                About
-              </Link>
+              {user ? (
+                // Authenticated user navigation
+                <>
+                  <Link 
+                    href="/dashboard" 
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-[#43B581] transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link 
+                    href="/dashboard/jobs" 
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-[#43B581] transition-colors"
+                  >
+                    Create Documents
+                  </Link>
+                  <Link 
+                    href="/profile" 
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-[#43B581] transition-colors"
+                  >
+                    Profile
+                  </Link>
+                </>
+              ) : (
+                // Public navigation
+                <>
+                  <Link 
+                    href="/" 
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-[#43B581] transition-colors"
+                  >
+                    Home
+                  </Link>
+                  <Link 
+                    href="/pricing" 
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-[#43B581] transition-colors"
+                  >
+                    Pricing
+                  </Link>
+                  <Link 
+                    href="/about" 
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-[#43B581] transition-colors"
+                  >
+                    About
+                  </Link>
+                </>
+              )}
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
-                <Link 
-                  href="/dashboard" 
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#43B581] transition-colors"
-                >
-                  Dashboard
-                </Link>
                 <button
                   onClick={logout}
                   className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#43B581] transition-colors"
@@ -109,35 +130,29 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg rounded-b-lg">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link
-              href="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link
-              href="/pricing"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/about"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              About
-            </Link>
             {user ? (
+              // Authenticated user mobile navigation
               <>
                 <Link
                   href="/dashboard"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Dashboard
+                </Link>
+                <Link
+                  href="/dashboard/jobs"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Create Documents
+                </Link>
+                <Link
+                  href="/profile"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Profile
                 </Link>
                 <button
                   onClick={() => {
@@ -150,7 +165,29 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
+              // Public mobile navigation
               <>
+                <Link
+                  href="/"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Pricing
+                </Link>
+                <Link
+                  href="/about"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  About
+                </Link>
                 <Link
                   href="/login"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
@@ -160,7 +197,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/signup"
-                  className="block px-3 py-2 text-center rounded-md text-base font-medium text-white bg-[#43B581] hover:bg-[#3a9e71] mx-3 mt-2"
+                  className="block px-3 py-2 rounded-md text-base font-medium bg-gradient-to-r from-[#43B581] to-[#6366F1] text-white hover:opacity-90"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Get Started Free
